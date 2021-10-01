@@ -4,11 +4,11 @@ import java.io.IOException;
 
 public class Bytes {
 
-  public final static byte[] EMPTY_BYTES = new byte[0];
-  public final static String HEX_TMP = "0123456789ABCDEF";
+  public static final byte[] EMPTY_BYTES = new byte[0];
+  public static final String HEX_TMP = "0123456789ABCDEF";
 
   public static byte[] toBytes(byte b) {
-    return new byte[] { b };
+    return new byte[] {b};
   }
 
   public static byte[] toBytes(String s) throws IOException {
@@ -34,7 +34,7 @@ public class Bytes {
     return b;
   }
 
-  public static String toHex(byte[] buf){
+  public static String toHex(byte[] buf) {
     return toHex(buf, 0, buf.length);
   }
 
@@ -61,7 +61,9 @@ public class Bytes {
   }
 
   public static int toInt(byte[] a) {
-    return (a[0] << 24) & 0xFF000000 | (a[1] << 16) & 0x00FF0000 | (a[2] << 8) & 0x0000FF00
+    return (a[0] << 24) & 0xFF000000
+        | (a[1] << 16) & 0x00FF0000
+        | (a[2] << 8) & 0x0000FF00
         | (a[3] << 0) & 0x000000FF;
   }
 
@@ -82,8 +84,8 @@ public class Bytes {
       throw new IOException("Invalid offset: " + offset + " or len: " + len);
     }
     if (offset + len > buf.length) {
-      throw new IOException("Buffer overflow, offset: " + offset + ", len: " + len
-          + ", buf.length:" + buf.length);
+      throw new IOException(
+          "Buffer overflow, offset: " + offset + ", len: " + len + ", buf.length:" + buf.length);
     }
     byte[] result = new byte[len];
     System.arraycopy(buf, offset, result, 0, len);

@@ -7,11 +7,7 @@ import org.apache.minibase.MiniBase.Flusher;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NavigableMap;
-import java.util.SortedMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -64,8 +60,11 @@ public class MemStore implements Closeable {
     if (getDataSize() > conf.getMaxMemstoreSize()) {
       if (isSnapshotFlushing.get() && shouldBlocking) {
         throw new IOException(
-                "Memstore is full, currentDataSize=" + dataSize.get() + "B, maxMemstoreSize="
-                + conf.getMaxMemstoreSize() + "B, please wait until the flushing is finished.");
+            "Memstore is full, currentDataSize="
+                + dataSize.get()
+                + "B, maxMemstoreSize="
+                + conf.getMaxMemstoreSize()
+                + "B, please wait until the flushing is finished.");
       } else if (isSnapshotFlushing.compareAndSet(false, true)) {
         pool.submit(new FlusherTask());
       }
@@ -81,8 +80,7 @@ public class MemStore implements Closeable {
   }
 
   @Override
-  public void close() throws IOException {
-  }
+  public void close() throws IOException {}
 
   private class FlusherTask implements Runnable {
     @Override
@@ -105,9 +103,12 @@ public class MemStore implements Closeable {
           flusher.flush(new IteratorWrapper(snapshot));
           success = true;
         } catch (IOException e) {
-          LOG.error("Failed to flush memstore, retries=" + i + ", maxFlushRetries="
-                    + conf.getFlushMaxRetries(),
-                  e);
+          LOG.error(
+              "Failed to flush memstore, retries="
+                  + i
+                  + ", maxFlushRetries="
+                  + conf.getFlushMaxRetries(),
+              e);
           if (i >= conf.getFlushMaxRetries()) {
             break;
           }
@@ -157,8 +158,9 @@ public class MemStore implements Closeable {
 
     private MultiIter it;
 
-    public MemStoreIter(NavigableMap<KeyValue, KeyValue> kvSet,
-                        NavigableMap<KeyValue, KeyValue> snapshot) throws IOException {
+    public MemStoreIter(
+        NavigableMap<KeyValue, KeyValue> kvSet, NavigableMap<KeyValue, KeyValue> snapshot)
+        throws IOException {
       List<IteratorWrapper> inputs = new ArrayList<>();
       if (kvSet != null && kvSet.size() > 0) {
         inputs.add(new IteratorWrapper(kvMap));

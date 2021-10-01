@@ -175,7 +175,7 @@ public class DiskStore implements Closeable {
       String fileTempName = fileName + FILE_NAME_TMP_SUFFIX;
       try {
         try (DiskFileWriter writer = new DiskFileWriter(fileTempName)) {
-          for (Iter<KeyValue> it = diskStore.createIterator(filesToCompact); it.hasNext();) {
+          for (Iter<KeyValue> it = diskStore.createIterator(filesToCompact); it.hasNext(); ) {
             writer.append(it.next());
           }
           writer.appendIndex();

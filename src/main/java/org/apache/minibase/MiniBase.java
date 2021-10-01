@@ -14,10 +14,9 @@ public interface MiniBase extends Closeable {
   /**
    * Fetch all the key values whose key located in the range [startKey, stopKey)
    *
-   * @param startKey start key to scan (inclusive), if start is byte[0], it means negative
-   *                 infinity.
-   * @param stopKey  to stop the scan. (exclusive), if stopKey is byte[0], it means positive
-   *                 infinity.
+   * @param startKey start key to scan (inclusive), if start is byte[0], it means negative infinity.
+   * @param stopKey to stop the scan. (exclusive), if stopKey is byte[0], it means positive
+   *     infinity.
    * @return Iterator for fetching the key value one by one.
    */
   Iter<KeyValue> scan(byte[] startKey, byte[] stopKey) throws IOException;

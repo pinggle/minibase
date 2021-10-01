@@ -1,17 +1,15 @@
 package org.apache.minibase;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.apache.minibase.MiniBase.Flusher;
+import org.apache.minibase.MiniBase.Iter;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.minibase.MiniBase.Flusher;
-import org.apache.minibase.MiniBase.Iter;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class TestMemstoreFlush {
 

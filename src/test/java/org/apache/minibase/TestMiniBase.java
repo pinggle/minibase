@@ -26,8 +26,7 @@ public class TestMiniBase {
   }
 
   @After
-  public void tearDown() {
-  }
+  public void tearDown() {}
 
   private static class WriterThread extends Thread {
 
@@ -63,7 +62,11 @@ public class TestMiniBase {
   @Test
   public void testPut() throws IOException, InterruptedException {
     // Set maxMemstoreSize to 64B, which make the memstore flush frequently.
-    Config conf = new Config().setDataDir(dataDir).setMaxMemstoreSize(1).setFlushMaxRetries(1)
+    Config conf =
+        new Config()
+            .setDataDir(dataDir)
+            .setMaxMemstoreSize(1)
+            .setFlushMaxRetries(1)
             .setMaxDiskFiles(10);
     final MiniBase db = MStore.create(conf).open();
 
@@ -153,7 +156,6 @@ public class TestMiniBase {
       return list.get(curIdx++);
     }
   }
-
 
   @Test
   public void testScanIter() throws Exception {

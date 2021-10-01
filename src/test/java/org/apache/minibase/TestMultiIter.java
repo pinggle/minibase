@@ -52,15 +52,15 @@ public class TestMultiIter {
 
   @Test
   public void testMergeSort() throws IOException {
-    int[] a = new int[] { 2, 5, 8, 10, 20 };
-    int[] b = new int[] { 11, 12, 12 };
+    int[] a = new int[] {2, 5, 8, 10, 20};
+    int[] b = new int[] {11, 12, 12};
     MockIter iter1 = new MockIter(a);
     MockIter iter2 = new MockIter(b);
-    SeekIter<KeyValue>[] iters = new SeekIter[] { iter1, iter2 };
+    SeekIter<KeyValue>[] iters = new SeekIter[] {iter1, iter2};
     MultiIter multiIter = new MultiIter(iters);
 
     String[] results =
-        new String[] { "00002", "00005", "00008", "00010", "00011", "00012", "00012", "00020" };
+        new String[] {"00002", "00005", "00008", "00010", "00011", "00012", "00012", "00020"};
     int index = 0;
 
     while (multiIter.hasNext()) {
@@ -80,7 +80,7 @@ public class TestMultiIter {
     int[] b = new int[] {};
     MockIter iter1 = new MockIter(a);
     MockIter iter2 = new MockIter(b);
-    SeekIter<KeyValue>[] iters = new SeekIter[] { iter1, iter2 };
+    SeekIter<KeyValue>[] iters = new SeekIter[] {iter1, iter2};
     MultiIter multiIter = new MultiIter(iters);
 
     Assert.assertFalse(multiIter.hasNext());
@@ -88,34 +88,34 @@ public class TestMultiIter {
 
   @Test
   public void testMergeSort3() throws IOException {
-    int[] a = new int[]{};
-    int[] b = new int[]{1};
+    int[] a = new int[] {};
+    int[] b = new int[] {1};
     MockIter iter1 = new MockIter(a);
     MockIter iter2 = new MockIter(b);
-    SeekIter<KeyValue>[] iters = new SeekIter[]{iter1, iter2};
+    SeekIter<KeyValue>[] iters = new SeekIter[] {iter1, iter2};
     MultiIter multiIter = new MultiIter(iters);
 
     Assert.assertTrue(multiIter.hasNext());
-    Assert.assertEquals(multiIter.next(),
-            KeyValue.createPut(Bytes.toBytes("00001"), Bytes.toBytes("00001"), 1L));
+    Assert.assertEquals(
+        multiIter.next(), KeyValue.createPut(Bytes.toBytes("00001"), Bytes.toBytes("00001"), 1L));
     Assert.assertFalse(multiIter.hasNext());
   }
 
   @Test
   public void testMergeSort4() throws IOException {
     int[] a = new int[] {};
-    int[] b = new int[] { 1, 1 };
-    int[] c = new int[] { 1, 1 };
+    int[] b = new int[] {1, 1};
+    int[] c = new int[] {1, 1};
     MockIter iter1 = new MockIter(a);
     MockIter iter2 = new MockIter(b);
     MockIter iter3 = new MockIter(c);
-    SeekIter<KeyValue>[] iters = new SeekIter[] { iter1, iter2, iter3 };
+    SeekIter<KeyValue>[] iters = new SeekIter[] {iter1, iter2, iter3};
     MultiIter multiIter = new MultiIter(iters);
 
     int count = 0;
     while (multiIter.hasNext()) {
-      Assert.assertEquals(multiIter.next(),
-              KeyValue.createPut(Bytes.toBytes("00001"), Bytes.toBytes("00001"), 1L));
+      Assert.assertEquals(
+          multiIter.next(), KeyValue.createPut(Bytes.toBytes("00001"), Bytes.toBytes("00001"), 1L));
       count++;
     }
     Assert.assertEquals(count, 4);
@@ -166,8 +166,8 @@ public class TestMultiIter {
       Iter<KeyValue> resultIter = reader.iterator();
       int count = 0;
       while (resultIter.hasNext()) {
-        Assert.assertEquals(resultIter.next(),
-                KeyValue.createPut(Bytes.toBytes(count), Bytes.toBytes(count), 1L));
+        Assert.assertEquals(
+            resultIter.next(), KeyValue.createPut(Bytes.toBytes(count), Bytes.toBytes(count), 1L));
         count++;
       }
       Assert.assertEquals(count, rowCount);
@@ -187,9 +187,9 @@ public class TestMultiIter {
 
   @Test
   public void testDiskFileMergeSort() throws IOException {
-    testDiskFileMergeSort(new String[] { "a.db", "b.db" }, "c.db", 10);
-    testDiskFileMergeSort(new String[] { "a.db" }, "b.db", 1);
-    testDiskFileMergeSort(new String[] { "a.db", "b.db", "c.db" }, "d.db", 1000);
-    testDiskFileMergeSort(new String[] { "a.db", "b.db", "c.db" }, "d.db", 100);
+    testDiskFileMergeSort(new String[] {"a.db", "b.db"}, "c.db", 10);
+    testDiskFileMergeSort(new String[] {"a.db"}, "b.db", 1);
+    testDiskFileMergeSort(new String[] {"a.db", "b.db", "c.db"}, "d.db", 1000);
+    testDiskFileMergeSort(new String[] {"a.db", "b.db", "c.db"}, "d.db", 100);
   }
 }

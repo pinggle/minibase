@@ -35,7 +35,7 @@ public class TestDiskFile {
       bytes[i] = br.getKeyValues().get(i).getKey();
     }
     BloomFilter bloom =
-            new BloomFilter(DiskFile.BLOOM_FILTER_HASH_COUNT, DiskFile.BLOOM_FILTER_BITS_PER_KEY);
+        new BloomFilter(DiskFile.BLOOM_FILTER_HASH_COUNT, DiskFile.BLOOM_FILTER_BITS_PER_KEY);
     Assert.assertArrayEquals(bloom.generate(bytes), bw.getBloomFilter());
   }
 
@@ -110,8 +110,8 @@ public class TestDiskFile {
         int index = 0;
         while (it.hasNext()) {
           KeyValue kv = it.next();
-          Assert.assertEquals(KeyValue.createPut(Bytes.toBytes(index), Bytes.toBytes(index), 1L),
-                  kv);
+          Assert.assertEquals(
+              KeyValue.createPut(Bytes.toBytes(index), Bytes.toBytes(index), 1L), kv);
           index++;
         }
         Assert.assertEquals(index, rowsCount);

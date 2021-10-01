@@ -2,17 +2,8 @@ package org.apache.minibase;
 
 import org.apache.minibase.MStore.SeekIter;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.io.*;
+import java.util.*;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
@@ -116,7 +107,7 @@ public class DiskFile implements Closeable {
 
       if (pos != bytes.length) {
         throw new IOException(
-                "pos(" + pos + ") should be equal to length of bytes (" + bytes.length + ")");
+            "pos(" + pos + ") should be equal to length of bytes (" + bytes.length + ")");
       }
       return bytes;
     }
@@ -328,8 +319,8 @@ public class DiskFile implements Closeable {
 
       byte[] buffer = currentWriter.serialize();
       out.write(buffer);
-      indexWriter.append(currentWriter.getLastKV(), currentOffset, buffer.length,
-        currentWriter.getBloomFilter());
+      indexWriter.append(
+          currentWriter.getLastKV(), currentOffset, buffer.length, currentWriter.getBloomFilter());
 
       currentOffset += buffer.length;
       blockCount += 1;
@@ -341,7 +332,8 @@ public class DiskFile implements Closeable {
     public void append(KeyValue kv) throws IOException {
       if (kv == null) return;
 
-      assert kv.getSerializeSize() + BlockWriter.KV_SIZE_LEN + BlockWriter.CHECKSUM_LEN < BLOCK_SIZE_UP_LIMIT;
+      assert kv.getSerializeSize() + BlockWriter.KV_SIZE_LEN + BlockWriter.CHECKSUM_LEN
+          < BLOCK_SIZE_UP_LIMIT;
 
       if ((currentWriter.getKeyValueCount() > 0)
           && (kv.getSerializeSize() + currentWriter.size() >= BLOCK_SIZE_UP_LIMIT)) {
@@ -446,8 +438,8 @@ public class DiskFile implements Closeable {
       blockMetaSet.add(meta);
     } while (offset < buffer.length);
 
-    assert blockMetaSet.size() == this.blockCount : "blockMetaSet.getSerializeSize:" + blockMetaSet.size()
-        + ", blockCount: " + blockCount;
+    assert blockMetaSet.size() == this.blockCount
+        : "blockMetaSet.getSerializeSize:" + blockMetaSet.size() + ", blockCount: " + blockCount;
   }
 
   public String getFileName() {
@@ -522,8 +514,9 @@ public class DiskFile implements Closeable {
           currentKVIndex++;
         }
         if (currentKVIndex >= currentReader.getKeyValues().size()) {
-          throw new IOException("Data block mis-encoded, lastKV of the currentReader >= kv, but " +
-                                "we found all kv < target");
+          throw new IOException(
+              "Data block mis-encoded, lastKV of the currentReader >= kv, but "
+                  + "we found all kv < target");
         }
       }
     }

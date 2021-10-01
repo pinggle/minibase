@@ -151,9 +151,14 @@ public class KeyValue implements Comparable<KeyValue> {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("key=").append(Bytes.toHex(this.key)).append("/op=").append(op).append
-            ("/sequenceId=").append(this.sequenceId).append("/value=").append(Bytes.toHex(this
-            .value));
+    sb.append("key=")
+        .append(Bytes.toHex(this.key))
+        .append("/op=")
+        .append(op)
+        .append("/sequenceId=")
+        .append(this.sequenceId)
+        .append("/value=")
+        .append(Bytes.toHex(this.value));
     return sb.toString();
   }
 

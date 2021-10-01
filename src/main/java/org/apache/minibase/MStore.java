@@ -143,8 +143,11 @@ public class MStore implements MiniBase {
             lastKV = pendingKV = curKV;
             return;
           } else if (ret > 0) {
-            String msg = "KV mis-encoded, curKV < lastKV, curKV:" + Bytes.toHex(curKV.getKey()) +
-                         ", lastKV:" + Bytes.toHex(lastKV.getKey());
+            String msg =
+                "KV mis-encoded, curKV < lastKV, curKV:"
+                    + Bytes.toHex(curKV.getKey())
+                    + ", lastKV:"
+                    + Bytes.toHex(lastKV.getKey());
             throw new IOException(msg);
           }
           // Same key with lastKV, should continue to fetch the next key value.

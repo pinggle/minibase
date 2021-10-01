@@ -9,7 +9,7 @@ public class TestBloomFilter {
 
   @Test
   public void testBloomFilter() throws IOException {
-    String[] keys = { "hello world", "hi", "bloom", "filter", "key", "value", "1", "value" };
+    String[] keys = {"hello world", "hi", "bloom", "filter", "key", "value", "1", "value"};
     BloomFilter bf = new BloomFilter(3, 10);
     byte[][] keyBytes = new byte[keys.length][];
     for (int i = 0; i < keys.length; i++) {
