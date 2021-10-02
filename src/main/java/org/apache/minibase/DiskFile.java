@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
+/** 磁盘文件管理;(实现流关闭接口) */
 public class DiskFile implements Closeable {
 
   public static final int BLOCK_SIZE_UP_LIMIT = 1024 * 1024 * 2;
@@ -290,6 +291,9 @@ public class DiskFile implements Closeable {
     }
   }
 
+  /**
+   * 磁盘文件写工具类;
+   */
   public static class DiskFileWriter implements Closeable {
     private String fname;
 

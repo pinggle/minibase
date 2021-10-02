@@ -1,11 +1,17 @@
 package org.apache.minibase;
 
+/** 全局配置; */
 public class Config {
 
+  // 内存最大16MB;
   private long maxMemstoreSize = 16 * 1024 * 1024;
+  // 内存刷盘最大重试次数;
   private int flushMaxRetries = 10;
+  // 数据目录;
   private String dataDir = "MiniBase";
+  // 磁盘sst文件最大个数;
   private int maxDiskFiles = 10;
+  // 最大线程池;
   private int maxThreadPoolSize = 5;
 
   private static final Config DEFAULT = new Config();

@@ -14,16 +14,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/** 内存存储 */
 public class MemStore implements Closeable {
 
   private static final Logger LOG = Logger.getLogger(MemStore.class);
 
+  // 内存中的活跃跳表占用的空间大小;
   private final AtomicLong dataSize = new AtomicLong();
 
+  // 活跃跳表;
   private volatile ConcurrentSkipListMap<KeyValue, KeyValue> kvMap;
+  // 不可变跳表;
   private volatile ConcurrentSkipListMap<KeyValue, KeyValue> snapshot;
 
+  // 更新锁;
   private final ReentrantReadWriteLock updateLock = new ReentrantReadWriteLock();
+  // 是否正在从内存刷入磁盘中;
   private final AtomicBoolean isSnapshotFlushing = new AtomicBoolean(false);
   private ExecutorService pool;
 
@@ -40,25 +46,36 @@ public class MemStore implements Closeable {
     this.snapshot = null;
   }
 
+  /**
+   * 往内存块中写入数据;
+   * @param kv  待写入的数据;
+   * @throws IOException
+   */
   public void add(KeyValue kv) throws IOException {
+    // 是否触发刷内存数据到磁盘;(内存块满+正在刷盘+必须阻塞=>抛异常告警)
     flushIfNeeded(true);
     updateLock.readLock().lock();
     try {
       KeyValue prevKeyValue;
       if ((prevKeyValue = kvMap.put(kv, kv)) == null) {
+        // 内存跳表中,没有该key;
         dataSize.addAndGet(kv.getSerializeSize());
       } else {
+        // 内存跳表中,有该key的历史数据;
         dataSize.addAndGet(kv.getSerializeSize() - prevKeyValue.getSerializeSize());
       }
     } finally {
       updateLock.readLock().unlock();
     }
+    // 是否触发刷内存数据到磁盘;(内存块满+正在刷盘+必须阻塞=>抛异常告警)
     flushIfNeeded(false);
   }
 
+  // 是否触发刷内存数据到磁盘;(内存块满+正在刷盘+必须阻塞=>抛异常告警)
   private void flushIfNeeded(boolean shouldBlocking) throws IOException {
     if (getDataSize() > conf.getMaxMemstoreSize()) {
       if (isSnapshotFlushing.get() && shouldBlocking) {
+        // 如果正在刷盘中,内存块又写满了,则抛异常;
         throw new IOException(
             "Memstore is full, currentDataSize="
                 + dataSize.get()
@@ -82,9 +99,13 @@ public class MemStore implements Closeable {
   @Override
   public void close() throws IOException {}
 
+  /**
+   * 采用双缓存Buffer方式,将内存块数据刷入磁盘;
+   */
   private class FlusherTask implements Runnable {
     @Override
     public void run() {
+      //TODO 步骤1:内存快照;
       // Step.1 memstore snpashot
       updateLock.writeLock().lock();
       try {
@@ -96,6 +117,7 @@ public class MemStore implements Closeable {
         updateLock.writeLock().unlock();
       }
 
+      //TODO 步骤2:刷内存块数据到磁盘;
       // Step.2 Flush the memstore to disk file.
       boolean success = false;
       for (int i = 0; i < conf.getFlushMaxRetries(); i++) {
@@ -115,6 +137,7 @@ public class MemStore implements Closeable {
         }
       }
 
+      //TODO 步骤3:清理内存快照数据;
       // Step.3 clear the snapshot.
       if (success) {
         // TODO MemStoreIter may get a NPE because we set null here ? should synchronize ?

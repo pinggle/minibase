@@ -18,6 +18,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 磁盘存储;
+ */
 public class DiskStore implements Closeable {
 
   private static final Logger LOG = Logger.getLogger(DiskStore.class);
@@ -26,8 +29,10 @@ public class DiskStore implements Closeable {
   private static final Pattern DATA_FILE_RE = Pattern.compile("data\\.([0-9]+)"); // data.1
 
   private String dataDir;
+  // 磁盘存储文件列表;(不断持久化内存数据到磁盘)
   private List<DiskFile> diskFiles;
 
+  // 磁盘文件限制数量;
   private int maxDiskFiles;
   private volatile AtomicLong maxFileId;
 
@@ -37,11 +42,13 @@ public class DiskStore implements Closeable {
     this.maxDiskFiles = maxDiskFiles;
   }
 
+  // 提取磁盘文件句柄列表;
   private File[] listDiskFiles() {
     File f = new File(this.dataDir);
     return f.listFiles(fname -> DATA_FILE_RE.matcher(fname.getName()).matches());
   }
 
+  // 获取磁盘文件最大的索引id;
   public synchronized long getMaxDiskId() {
     // TODO can we save the maxFileId ? and next time, need not to traverse the disk file.
     File[] files = listDiskFiles();
@@ -75,6 +82,9 @@ public class DiskStore implements Closeable {
     return new File(this.dataDir, String.format("data.%020d", nextDiskFileId())).toString();
   }
 
+  /**
+   * 打开储存的磁盘文件列表;
+   */
   public void open() throws IOException {
     File[] files = listDiskFiles();
     for (File f : files) {
@@ -85,6 +95,9 @@ public class DiskStore implements Closeable {
     maxFileId = new AtomicLong(getMaxDiskId());
   }
 
+  /**
+   * 获取存储的磁盘文件管理结构;
+   */
   public List<DiskFile> getDiskFiles() {
     synchronized (diskFiles) {
       return new ArrayList<>(diskFiles);
@@ -104,6 +117,7 @@ public class DiskStore implements Closeable {
   @Override
   public void close() throws IOException {
     IOException closedException = null;
+    // 依次关闭文件句柄;
     for (DiskFile df : diskFiles) {
       try {
         df.close();

@@ -2,6 +2,7 @@ package org.apache.minibase;
 
 import java.io.IOException;
 
+/** Byte工具类; */
 public class Bytes {
 
   public static final byte[] EMPTY_BYTES = new byte[0];
@@ -11,11 +12,24 @@ public class Bytes {
     return new byte[] {b};
   }
 
+  /**
+   * String转byte数组;
+   *
+   * @param s 输入String数据;
+   * @return byte数组;
+   * @throws IOException
+   */
   public static byte[] toBytes(String s) throws IOException {
     if (s == null) return new byte[0];
     return s.getBytes("UTF-8");
   }
 
+  /**
+   * int转byte数组;
+   *
+   * @param x 输入int数据;
+   * @return byte数组;
+   */
   public static byte[] toBytes(int x) {
     byte[] b = new byte[4];
     b[3] = (byte) (x & 0xFF);
@@ -25,6 +39,12 @@ public class Bytes {
     return b;
   }
 
+  /**
+   * long转byte数组;
+   *
+   * @param x 输入long数据;
+   * @return byte数组;
+   */
   public static byte[] toBytes(long x) {
     byte[] b = new byte[8];
     for (int i = 7; i >= 0; i--) {
@@ -34,10 +54,24 @@ public class Bytes {
     return b;
   }
 
+  /**
+   * byte数组转化成String;
+   *
+   * @param buf 输入byte数组;
+   * @return
+   */
   public static String toHex(byte[] buf) {
     return toHex(buf, 0, buf.length);
   }
 
+  /**
+   * 将byte数组指定的位置数据转化成String;
+   *
+   * @param buf 输入byte数组;
+   * @param offset 开始读取的位置;
+   * @param len 读取的长度;
+   * @return 转化成的String数据;
+   */
   public static String toHex(byte[] buf, int offset, int len) {
     StringBuilder sb = new StringBuilder();
     for (int i = offset; i < offset + len; i++) {
@@ -51,6 +85,13 @@ public class Bytes {
     return sb.toString();
   }
 
+  /**
+   * 合并两个byte数组;
+   *
+   * @param a byte数组1;
+   * @param b byte数组2;
+   * @return 合并后的byte数组;
+   */
   public static byte[] toBytes(byte[] a, byte[] b) {
     if (a == null) return b;
     if (b == null) return a;
@@ -60,6 +101,12 @@ public class Bytes {
     return result;
   }
 
+  /**
+   * byte数组转化成Int类型;
+   *
+   * @param a 输入的byte数组;
+   * @return 转化成的Int数据;
+   */
   public static int toInt(byte[] a) {
     return (a[0] << 24) & 0xFF000000
         | (a[1] << 16) & 0x00FF0000
@@ -67,6 +114,12 @@ public class Bytes {
         | (a[3] << 0) & 0x000000FF;
   }
 
+  /**
+   * byte数组转化成Long类型;
+   *
+   * @param a 输入的byte数组;
+   * @return 转化成的Long数据;
+   */
   public static long toLong(byte[] a) {
     long x = 0;
     for (int i = 0; i < 8; i++) {
@@ -76,6 +129,15 @@ public class Bytes {
     return x;
   }
 
+  /**
+   * 提取指定位置的数据; 将buf从offset位置开始,提取len长度的数据,并返回;
+   *
+   * @param buf
+   * @param offset
+   * @param len
+   * @return
+   * @throws IOException
+   */
   public static byte[] slice(byte[] buf, int offset, int len) throws IOException {
     if (buf == null) {
       throw new IOException("buffer is null");
@@ -92,6 +154,12 @@ public class Bytes {
     return result;
   }
 
+  /**
+   * 对key进行hash;
+   *
+   * @param key
+   * @return
+   */
   public static int hash(byte[] key) {
     if (key == null) return 0;
     int h = 1;
@@ -101,6 +169,13 @@ public class Bytes {
     return h;
   }
 
+  /**
+   * 比较两个byte数组是否相等相同;
+   *
+   * @param a
+   * @param b
+   * @return
+   */
   public static int compare(byte[] a, byte[] b) {
     if (a == b) return 0;
     if (a == null) return -1;

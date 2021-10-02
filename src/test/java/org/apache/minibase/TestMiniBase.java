@@ -28,6 +28,7 @@ public class TestMiniBase {
   @After
   public void tearDown() {}
 
+  // 写入线程测试类;(模拟外部调用写入数据)
   private static class WriterThread extends Thread {
 
     private long start, end;
@@ -59,6 +60,9 @@ public class TestMiniBase {
     }
   }
 
+  /**
+   * 测试写入数据;
+   */
   @Test
   public void testPut() throws IOException, InterruptedException {
     // Set maxMemstoreSize to 64B, which make the memstore flush frequently.
@@ -73,6 +77,7 @@ public class TestMiniBase {
     final long totalKVSize = 100L;
     final int threadSize = 5;
 
+    // 模拟5个线程,并发写入100条数据;
     WriterThread[] writers = new WriterThread[threadSize];
     for (int i = 0; i < threadSize; i++) {
       long kvPerThread = totalKVSize / threadSize;
@@ -80,15 +85,20 @@ public class TestMiniBase {
       writers[i].start();
     }
 
+    // 等待所有写入线程执行完毕;
     for (int i = 0; i < threadSize; i++) {
       writers[i].join();
     }
 
+    // 遍历所有数据;
     Iter<KeyValue> kv = db.scan();
     long current = 0;
     while (kv.hasNext()) {
+      // 取出一条记录;
       KeyValue expected = kv.next();
+      // 新建一条put的数据结构;
       KeyValue currentKV = KeyValue.createPut(Bytes.toBytes(current), Bytes.toBytes(current), 0L);
+      // 比较取出来的数据 和 新建的数据 是否完全一致;
       Assert.assertArrayEquals(expected.getKey(), currentKV.getKey());
       Assert.assertArrayEquals(expected.getValue(), currentKV.getValue());
       Assert.assertEquals(expected.getOp(), Op.Put);

@@ -12,6 +12,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * 小文件存储管理;
+ */
 public class MStore implements MiniBase {
 
   private ExecutorService pool;

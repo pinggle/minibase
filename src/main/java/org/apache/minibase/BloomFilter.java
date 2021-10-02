@@ -1,5 +1,6 @@
 package org.apache.minibase;
 
+/** 隆过滤器; */
 public class BloomFilter {
   private int k;
   private int bitsPerKey;
